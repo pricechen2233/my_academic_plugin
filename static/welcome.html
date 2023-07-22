@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+    <script src="/static/js/vue.global.js"></script>
+    <script src="/static/js/axios.min.js"></script>
+    <!--<link rel="stylesheet" href="/static/css/styles.css">-->
+    <style>
+        body{
+            background-color: #ffffff;
+            border:0px solid;
+            border-radius:10px;
+            box-shadow: 10px 10px 5px #888888;
+        }
+
+        div{
+            margin: auto;
+            padding: 120px;
+            text-align: center;
+        }
+
+        h2{
+            color:rgb(255, 153, 0);
+            text-align: center;
+            font-size:50px;
+        }
+
+        label{
+            margin: auto;
+            color: #000;
+            line-height: 50px;
+            font-size:20px;
+        }
+
+        input{
+            line-height: 30px;
+            font-size:20px;
+        }
+
+        button{
+            background-color: #fed7aa; 
+            border: none;
+            border-radius:15px;
+            color: #ea580c;
+            padding: 10px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 32px 8px;
+            cursor: pointer;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+        }
+        button:hover{
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+    </style>
+</head>
+<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <div id="app">
+        <div>
+            <h2>登录后测试</h2>
+            <button type="button" @click="get_my_info">当前用户(获取当前用户信息)</button>
+            <button type="button" @click="get_gpt">go to gpt page</button>
+        </div>
+    </div>
+    <script>
+        function writeObj(obj){
+            var description = "";
+            for(var i in obj){ //用javascript的for/in循环遍历对象的属性
+                var property=obj[i];
+                description+=i+" = "+property+"\n";
+            }
+            alert(description);
+        }
+        const token = document.cookie.token;
+        const app1 = {
+            data() {
+                return {
+                }
+            },
+            methods: {
+                get_my_info() {
+                    axios({
+                        method: "get",
+                        url: "/user/me",
+                        headers: {
+                            'Authorization': 'Bearer' + token
+                        },
+                    })
+                    .then(function(response){
+                        writeObj(response.data);
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        console.log(token);
+                        console.log(error);
+                    });
+                },
+                get_gpt() {
+                    axios({
+                        method: "get",
+                        url: "/gpt",
+                    })
+                    .then(function(response){
+              			// 重定向到 welcome 页面
+              			window.location.href = "/gpt";
+                    })
+                    .catch(error => {
+                        console.log(token);
+                        console.log(error);
+                    });
+                }
+                
+            }
+        }
+        Vue.createApp(app1).mount('#app')
+    </script>
+</body>
+</html>
